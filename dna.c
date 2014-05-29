@@ -107,7 +107,7 @@ int main(int argc, char **argv){
         filename = argv[2];
         doencode = 0;
     } else{
-        fprintf(stderr, "Usage:\tdna.py file_to_encode\n\tdna.py -d file_to_decode\n");
+        fprintf(stderr, "Usage: %s [-d] file\n", argv[0]);
         return 1;
     }
     if(!(fp = fopen(filename, "r"))){
