@@ -45,31 +45,25 @@ void encode(FILE *fp){
 }
 
 void decode(FILE *fp){
-    size_t writei = 0, patterni = 0, pos1, pos2;
+    size_t writei = 0, patterni = 0;
     int shift = 6;
-    char write_buf[1024], bin = 0;
-    unsigned char read_buf[10];
+    char read_buf[10], write_buf[1024], bin = 0, pair0, pair1;
     while(fgets(read_buf, sizeof(read_buf), fp) != NULL){
         // position of the first char
-        pos1 = spaces_pattern[patterni];
+        pair0 = read_buf[spaces_pattern[patterni]];
         // position of the second char
-        pos2 = pos1 + dashes_pattern[patterni] + 1;
-        switch(read_buf[pos1] - read_buf[pos2]){
-            case 'A' - 'T':
-                //bin |= 0x0 << shift;
-                break;
-            case 'C' - 'G':
-                bin |= 0x1 << shift;
-                break;
-            case 'G' - 'C':
-                bin |= 0x2 << shift;
-                break;
-            case 'T' - 'A':
-                bin |= 0x3 << shift;
-                break;
-            default:
-                fprintf(stderr, "Input file not in valid DNA format.\n");
-                return;
+        pair1 = read_buf[spaces_pattern[patterni] + dashes_pattern[patterni] + 1];
+        if(pair0 == 'A' && pair1 == 'T'){
+            //bin |= 0x0 << shift;// Unnecessary OR with 0
+        } else if(pair0 == 'C' && pair1 == 'G'){
+            bin |= 0x1 << shift;
+        } else if(pair0 == 'G' && pair1 == 'C'){
+            bin |= 0x2 << shift;
+        } else if(pair0 == 'T' && pair1 == 'A'){
+            bin |= 0x3 << shift;
+        } else{
+            fprintf(stderr, "ERROR: Invalid input file: not in DNA format.\n");
+            return;
         }
         shift -= 2;
         // Check if we finshed constructing a byte
