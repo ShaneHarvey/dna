@@ -48,7 +48,7 @@ def main():
         if sys.argv[1] == '-d':
             decode(sys.argv[2])
             return
-    print('Usage: \tdna.py file_to_encode\n\tdna.py -d file_to_decode.dna')
+    print('Usage: ' + sys.argv[0] + ' [-d] file')
 
 if __name__ == '__main__':
 	main()
