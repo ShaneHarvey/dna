@@ -1,25 +1,14 @@
 #DNA
-DNA is a simple encoding scheme that translates files to and from DNA.
+DNA is a simple encoding scheme that translates data to and from double helix format.
 
 Simply build & run
 ```bash
-$ gcc dna.c -o dna
-$ ./dna dna.c > dna.c.dna
-$ ./dna -d dna.c.dna > dna2.c
-$ diff dna.c dna2.c
-```
-
-Or run the Python version
-```bash
-$ python dna.py dna.py > dna.py.dna
-$ python dna.py -d dna.py.dna > dna2.py
-$ diff dna.py dna2.py
-```
-
-The output looks like this
-```bash
-$ ./dna dna.c
- AT
+$ gcc -Wall -Werror -o dna dna.c
+$ ./dna dna > dna.dna
+$ ./dna -d dna.dna > newdna
+$ chmod +x newdna
+$ ./newdna dna.c
+AT
 G--C
 A---T
 T----A
@@ -46,8 +35,27 @@ T----A
    C---G
     G--C
      CG
+     AT
+    C--G
+   G---C
+  C----G
+ C----G
+A----T
+G---C
+A--T
+ AT
+ AT
+T--A
+T---A
 ...
 ```
 
+Similarly run the Python version
+```bash
+$ ./dna.py dna.py > dna.py.dna
+$ ./dna.py -d dna.py.dna > dna2.py
+$ diff dna.py dna2.py
+
+```
 #Inspiration
 Inspired by [Yusuke Endoh](https://github.com/mame)'s Ruby [DoubleHelix](https://github.com/mame/doublehelix) utility.

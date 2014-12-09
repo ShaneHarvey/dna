@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 
 size_t spaces_pattern[] = {1,0,0,0,1,2,3,4,5,5,4,3,2,1,0,0,0,1};
 size_t dashes_pattern[] = {0,2,3,4,4,4,3,2,0,0,2,3,4,4,4,3,2,0};
@@ -9,11 +10,11 @@ void encode(FILE *fp){
     int shift;
     char *pair, temp[9];
     unsigned char buf[1024];
-    // Read BUF_SIZE bytes at a time
-    while ((nread = fread(buf, 1, sizeof(buf), fp)) > 0) {
-        // For each byte
+    /* Read BUF_SIZE bytes at a time */
+    while ((nread = fread(buf, sizeof(buf), 1, fp)) == 1) {
+        /* For each byte */
         for(i = 0; i < nread; ++i){
-            // For each 1/2 nibble
+            /* For each 1/2 nibble */
             for(shift = 6; shift >= 0; shift -= 2){
                 switch((buf[i] >> shift) & 0x3){
                     case 0x0:
@@ -29,7 +30,7 @@ void encode(FILE *fp){
                         pair = "TA";
                         break;
                 }
-                // Build output
+                /* Build output */
                 for(tempi = 0; tempi < spaces_pattern[patterni]; ++tempi)
                     temp[tempi] = ' ';
                 temp[tempi++] = pair[0];
@@ -48,13 +49,14 @@ void decode(FILE *fp){
     size_t writei = 0, patterni = 0;
     int shift = 6;
     char read_buf[10], write_buf[1024], bin = 0, pair0, pair1;
-    while(fgets(read_buf, sizeof(read_buf), fp) != NULL){
-        // position of the first char
+    while(fgets(read_buf, sizeof(read_buf), fp) != NULL) {
+        /* position of the first char */
         pair0 = read_buf[spaces_pattern[patterni]];
-        // position of the second char
+        /* position of the second char */
         pair1 = read_buf[spaces_pattern[patterni] + dashes_pattern[patterni] + 1];
         if(pair0 == 'A' && pair1 == 'T'){
-            //bin |= 0x0 << shift;// Unnecessary OR with 0
+            /* Unnecessary OR with 0 */
+            /* bin |= 0x0 << shift; */
         } else if(pair0 == 'C' && pair1 == 'G'){
             bin |= 0x1 << shift;
         } else if(pair0 == 'G' && pair1 == 'C'){
@@ -66,10 +68,10 @@ void decode(FILE *fp){
             return;
         }
         shift -= 2;
-        // Check if we finshed constructing a byte
+        /* Check if we finshed constructing a byte */
         if(shift < 0){
             write_buf[writei++] = bin;
-            // Check if we filled the write_buf
+            /* Check if we filled the write_buf */
             if(writei == sizeof(write_buf)){
                 fwrite(write_buf, 1, sizeof(write_buf), stdout);
                 writei = 0;
@@ -79,12 +81,12 @@ void decode(FILE *fp){
         }
         patterni = (patterni + 1) % pattern_len;
     }
-    // Check if we ended in the middle of constructing a byte
+    /* Check if we ended in the middle of constructing a byte */
     if(shift != 6){
         fprintf(stderr, "Input file not in valid DNA format.\n");
         return;
     }
-    // Check if we have data in the write buffer
+    /* Check if we have data in the write buffer */
     if(writei)
         fwrite(write_buf, 1, writei, stdout);
 }

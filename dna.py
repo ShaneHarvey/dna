@@ -1,3 +1,4 @@
+#!/bin/env python2.7
 from __future__ import print_function
 import sys
 import collections
@@ -51,4 +52,4 @@ def main():
     print('Usage: ' + sys.argv[0] + ' [-d] file')
 
 if __name__ == '__main__':
-	main()
+    main()

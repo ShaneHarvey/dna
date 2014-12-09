@@ -28,3 +28,6 @@ __pycache__/
 
 # Binaries
 dna
+
+# Encoded files
+*.dna
